@@ -13,7 +13,11 @@ const reviewRoutes = require('./routes/reviews');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp',
-    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+    { useNewUrlParser: true, 
+      useUnifiedTopology: true, 
+      useCreateIndex: true,
+      useFindAndModify: false
+    })
     .then(() => {
         console.log(`MongoDBコネクションOK！`);
     })
@@ -32,7 +36,7 @@ app.set(`views`, path.join(__dirname, `views`));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride(`_method`));
-
+app.use(express.static(path.join(__dirname,`public`)));
 
 app.get('/', (req, res) => {
     res.render(`home`)
