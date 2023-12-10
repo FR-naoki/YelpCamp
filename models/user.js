@@ -4,12 +4,12 @@ const passportLocalMongoose = require(`passport-local-mongoose`);
 
 const userSchema = new Schema({
     email:{
-        Type: String,
-        required: ture,
+        type: String,
+        required: true,
         unique: true
     }
 });
 
 userSchema.plugin(passportLocalMongoose);
 
-module.exports = model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

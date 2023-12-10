@@ -14,7 +14,7 @@ const User = require('./models/user');
 const { get } = require('https');
 const { error } = require('console');
 
-
+const userRoutes = require(`./routes/users`);
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 
@@ -76,6 +76,7 @@ app.get('/', (req, res) => {
     res.render(`home`)
 });
 
+app.use(`/`, userRoutes);
 app.use(`/campgrounds`, campgroundRoutes);
 app.use(`/campgrounds/:id/reviews`, reviewRoutes);
 
