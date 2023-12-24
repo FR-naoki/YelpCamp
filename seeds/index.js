@@ -27,9 +27,19 @@ const seedDB = async () => {
         author: `65765fd52c590a4847f35963`,
         location: `${cities[randomCityIndex].prefecture}${cities[randomCityIndex].city}`,
         title: `${sample(descriptors)}・${sample(places)}`,
-        image: `https://source.unsplash.com/collection/483251`,
+        // image: `https://source.unsplash.com/collection/483251`,
         description:`木曾路はすべて山の中である。あるところは岨づたいに行く崖の道であり、あるところは数十間の深さに臨む木曾川の岸であり、あるところは山の尾をめぐる谷の入り口である。`,
-        price
+        price,
+        images : [
+            {
+                url: 'https://res.cloudinary.com/dr1jmn5og/image/upload/v1703378575/YelpCamp/igflqu9attwj5vjggran.jpg',
+                filename: 'YelpCamp/igflqu9attwj5vjggran'
+              },
+              {
+                url: 'https://res.cloudinary.com/dr1jmn5og/image/upload/v1703378577/YelpCamp/jivd2ojy7bxhxx4l0c5w.jpg',
+                filename: 'YelpCamp/jivd2ojy7bxhxx4l0c5w'
+              }
+        ]
         // price:price　　と書くこともできるが省略表記を使っている
     });
     await camp.save();
