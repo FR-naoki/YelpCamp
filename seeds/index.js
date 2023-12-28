@@ -29,6 +29,13 @@ const seedDB = async () => {
         title: `${sample(descriptors)}・${sample(places)}`,
         // image: `https://source.unsplash.com/collection/483251`,
         description:`木曾路はすべて山の中である。あるところは岨づたいに行く崖の道であり、あるところは数十間の深さに臨む木曾川の岸であり、あるところは山の尾をめぐる谷の入り口である。`,
+        geometry: {
+            type: `Point`,
+            coordinates: [
+                cities[randomCityIndex].longitude,
+                cities[randomCityIndex].latitude
+            ]
+        },
         price,
         images : [
             {
