@@ -57,11 +57,13 @@ app.use(mongoSanitize({
 }));
 
 const sessionConfig = {
+    name: `session`,
     secret: `mysecret`,
     resave: false,
     saveUninitialized: true,
     cookie:{
         httpOnly:true,
+        // secure:true,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 };
