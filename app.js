@@ -25,10 +25,15 @@ const userRoutes = require(`./routes/users`);
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 
+const MongoStore = require('connect-mongo');
 
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp',
-    { useNewUrlParser: true, 
-      useUnifiedTopology: true, 
+// const dbUrl = process.env.DB_URL;
+// 'mongodb://127.0.0.1:27017/yelp-camp'
+
+const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp'
+mongoose.connect(dbUrl,
+    { useNewUrlParser: true,
+      useUnifiedTopology: true,
       useCreateIndex: true,
       useFindAndModify: false
     })
@@ -56,7 +61,20 @@ app.use(mongoSanitize({
     replaceWith: '_',
 }));
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: 'mysecret'
+      },
+    touchAfter: 24 * 3600
+  });
+
+  store.on(`error`,(e) => {
+    console.log(`セッションストアエラー`, e);
+  })
+
 const sessionConfig = {
+    store,
     name: `session`,
     secret: `mysecret`,
     resave: false,
@@ -80,6 +98,41 @@ passport.deserializeUser(User.deserializeUser());
 app.use(flash());
 app.use(helmet({
     contentSecurityPolicy: false
+}));
+
+const scriptSrcUrls = [
+    'https://api.mapbox.com',
+    'https://cdn.jsdelivr.net'
+];
+const styleSrcUrls = [
+    'https://api.mapbox.com',
+    'https://cdn.jsdelivr.net'
+];
+const connectSrcUrls = [
+    'https://api.mapbox.com',
+    'https://*.tiles.mapbox.com',
+    'https://events.mapbox.com'
+];
+const fontSrcUrls = [
+    `https: data:`
+];
+const imgSrcUrls = [
+    `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`,
+    'https://images.unsplash.com'
+];
+
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: [],
+        connectSrc: ["'self'", ...connectSrcUrls],
+        scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+        styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+        workerSrc: ["'self'", "blob:"],
+        childSrc: ["blob:"],
+        objectSrc: [],
+        imgSrc: ["'self'", 'blob:', 'data:', ...imgSrcUrls],
+        fontSrc: ["'self'", ...fontSrcUrls]
+    }
 }));
 
 app.use((req, res, next) => {
