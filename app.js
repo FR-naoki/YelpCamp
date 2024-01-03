@@ -30,7 +30,7 @@ const MongoStore = require('connect-mongo');
 // const dbUrl = process.env.DB_URL;
 // 'mongodb://127.0.0.1:27017/yelp-camp'
 
-const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp'
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
 mongoose.connect(dbUrl,
     { useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -61,10 +61,12 @@ app.use(mongoSanitize({
     replaceWith: '_',
 }));
 
+const secret = process.env.SECRET || `mysecret`
+
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
-        secret: 'mysecret'
+        secret
       },
     touchAfter: 24 * 3600
   });
@@ -76,7 +78,7 @@ const store = MongoStore.create({
 const sessionConfig = {
     store,
     name: `session`,
-    secret: `mysecret`,
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie:{
@@ -170,7 +172,8 @@ app.use((err, req, res, next) => {
 //     res.status(statusCode).render(`error`, { err });
 // });
 
+const port = process.env.PORT || 3000;
 
-app.listen(3000, () => {
-    console.log(`ポート3000でリクエスト待受中`);
+app.listen(port, () => {
+    console.log(`ポート${port}でリクエスト待受中`);
 });
