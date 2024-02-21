@@ -24,7 +24,6 @@ module.exports.validateCampground = (req, res, next) => {
     }
 }
 
-module.exports.isAuthor = async (req, res, next) => {
 
 
 module.exports.isReviewAuthor = async (req, res, next) => {
