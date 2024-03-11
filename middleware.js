@@ -23,3 +23,16 @@ module.exports.validateCampground = (req, res, next) => {
         next();
     }
 }
+
+
+
+module.exports.isReviewAuthor = async (req, res, next) => {
+    const { id, reviewId } = req.params;
+    const review = await Review.findById(reviewId);
+    if (!review.author.equals(req.user._id)) {
+        req.flash(`error`, `そのアクションの権限がありません`)
+        return res.redirect(`/campgrounds/${id}`);
+    }
+    next();
+};
+
